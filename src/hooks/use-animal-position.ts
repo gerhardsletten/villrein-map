@@ -1,8 +1,10 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { TAnimalTracking } from "../types/animal-tracking";
+import type { TAnimalTracking } from "../types/animal-tracking";
 import apiFetch from "../utils/fetch-api";
 
 export type IAnimalPositionDetail = "full" | "week" | "day";
+
+type TAnimalTrackingApi = Omit<TAnimalTracking, "num">;
 
 export function useAnimalPosition(
   year: string,
@@ -12,7 +14,7 @@ export function useAnimalPosition(
   return useQuery({
     queryKey: ["animal-position", year, details, animal],
     queryFn: async () => {
-      const payload: TAnimalTracking[] = await apiFetch(
+      const payload: TAnimalTrackingApi[] = await apiFetch(
         `/api/${year}-${details}.json`,
         {
           method: "GET",
@@ -21,7 +23,11 @@ export function useAnimalPosition(
           },
         }
       );
-      return payload;
+      const data: TAnimalTracking[] = payload.map((item, i) => ({
+        ...item,
+        num: i,
+      }));
+      return data;
     },
     placeholderData: keepPreviousData,
   });
