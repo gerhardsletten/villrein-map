@@ -28,70 +28,72 @@ export const dataGridcColumns = [
     ),
     enableSorting: true,
   }),
-  columnHelper.accessor("positions", {
-    id: "positions",
+  columnHelper.accessor((row) => row.positions.length, {
+    id: "position",
     header: "posisjoner",
-    cell: ({ getValue }) => {
-      return getValue().length;
-    },
   }),
-  columnHelper.accessor("positions", {
-    id: "dist",
-    header: "distanse",
-    cell: ({ getValue }) => {
-      const positions = getValue();
-      const value = positions.reduce((sum, item) => {
+  columnHelper.accessor(
+    (row) => {
+      return row.positions.reduce((sum, item) => {
         return sum + item.dist;
       }, 0);
-      return formatMeter(value);
     },
-  }),
-  columnHelper.accessor("positions", {
-    id: "min",
-    header: "min",
-    cell: ({ getValue }) => {
-      const positions = getValue();
-      const items = positions.map((item) => item.dist);
-      const value = Math.min(...items);
-      return formatMeter(value);
+    {
+      id: "dist",
+      header: "distanse",
+      cell: ({ getValue }) => formatMeter(getValue()),
+    }
+  ),
+  columnHelper.accessor(
+    (row) => {
+      const items = row.positions.map((item) => item.dist);
+      return Math.min(...items);
     },
-  }),
-  columnHelper.accessor("positions", {
-    id: "avg",
-    header: "snitt / dag",
-    cell: ({ getValue }) => {
-      const positions = getValue();
-      const items = positions
+    {
+      id: "min",
+      header: "min",
+      cell: ({ getValue }) => formatMeter(getValue()),
+    }
+  ),
+  columnHelper.accessor(
+    (row) => {
+      const items = row.positions
         .map((item) => item.date.split("T")[0])
         .filter((item) => item);
       const days = [...new Set(items)];
-
-      const value = positions.reduce((sum, item) => {
+      const value = row.positions.reduce((sum, item) => {
         return sum + item.dist;
       }, 0);
-      return formatMeter(value / days.length);
+      return value / days.length;
     },
-  }),
-  columnHelper.accessor("positions", {
-    id: "max",
-    header: "maks",
-    cell: ({ getValue }) => {
-      const positions = getValue();
-      const items = positions.map((item) => item.dist);
-      const value = Math.max(...items);
-      return formatMeter(value);
+    {
+      id: "avg",
+      header: "snitt / dag",
+      cell: ({ getValue }) => formatMeter(getValue()),
+    }
+  ),
+  columnHelper.accessor(
+    (row) => {
+      const items = row.positions.map((item) => item.dist);
+      return Math.max(...items);
     },
-  }),
-  columnHelper.accessor("positions", {
-    id: "days",
-    header: "dager",
-    cell: ({ getValue }) => {
-      const positions = getValue();
-      const items = positions
+    {
+      id: "max",
+      header: "maks",
+      cell: ({ getValue }) => formatMeter(getValue()),
+    }
+  ),
+  columnHelper.accessor(
+    (row) => {
+      const items = row.positions
         .map((item) => item.date.split("T")[0])
         .filter((item) => item);
-      const uniq = [...new Set(items)];
-      return uniq.length;
+      return [...new Set(items)].length;
     },
-  }),
+    {
+      id: "days",
+      header: "dager",
+      cell: ({ getValue }) => getValue(),
+    }
+  ),
 ];

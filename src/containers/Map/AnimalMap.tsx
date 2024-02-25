@@ -26,8 +26,10 @@ export function AnimalMap() {
   const [mode, setMode] = useState<TViewMode>("regular");
   const { year: yearSlug } = useParams();
   const [detail, setDetail] = useState<IAnimalPositionDetail>("day");
-  const year = yearSlug || "2023";
+
   const years = useAnimalYear();
+  const defaultYear = years.data ? years.data[years.data.length - 1] : "2023";
+  const year = yearSlug || defaultYear;
   const { data: dataRaw } = useAnimalPosition(year, detail);
   const data = useMemo<TAnimalTracking[] | undefined>(() => {
     if (!dataRaw) {
