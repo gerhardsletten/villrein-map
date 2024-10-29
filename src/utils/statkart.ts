@@ -7,7 +7,7 @@ export type IMapTile = {
 export const maps: IMapTile[] = [
   {
     name: "Topografisk kart",
-    url: "https://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo4&zoom={z}&x={x}&y={y}",
+    url: "https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png",
     attr: '<a href="http://www.kartverket.no/">Kartverket</a>',
   },
   {
